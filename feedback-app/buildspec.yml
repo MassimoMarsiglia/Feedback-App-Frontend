@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    VITE_API_BASE_URL: "https://api.yourdomain.com"
+    VITE_API_BASE_URL: "https://94p11xsga0.execute-api.eu-west-1.amazonaws.com/prod"
     VITE_APP_ENV: "production"
 phases:
   install:
