@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  variables:
+    VITE_API_BASE_URL: "https://api.yourdomain.com"
+    VITE_APP_ENV: "production"
 phases:
   install:
     runtime-versions:
@@ -13,12 +17,15 @@ phases:
   build:
     commands:
       - echo Build started on `date`
+      - echo "Building with API URL:" $VITE_API_BASE_URL
       - npm run build
       - echo Build completed on `date`
 artifacts:
   files:
-    - '**/*'
+    - index.html   # Include the root index file
+    - assets/**/* # Explicitly include ALL contents of the assets folder, retaining its path
   base-directory: feedback-app/dist
+  discard-paths: yes # Keep this to ensure files go to the S3 bucket root
 cache:
   paths:
     - 'node_modules/**/*'

@@ -6,18 +6,16 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { ArrowLeft, PlusCircle, Sparkles } from 'lucide-react'
+import { topicApi } from '@/services/api'
 
 export const CreateTopicPage = () => {
-  const [topicName, setTopicName] = useState('')
-  const [topicDescription, setTopicDescription] = useState('')
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
 
-  const handleCreateTopic = (e: React.FormEvent) => {
+  const handleCreateTopic = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (topicName.trim()) {
-      // Here you would typically save to backend
-      console.log('Creating topic:', { topicName, topicDescription })
-      // For now, just navigate back or to a success page
-      // navigate('/')
+    if (name.trim()) {
+      await topicApi.create({ name, description })
     }
   }
 
@@ -66,8 +64,8 @@ export const CreateTopicPage = () => {
                   <Input
                     id="topic-name"
                     placeholder="e.g., New Mobile App Experience"
-                    value={topicName}
-                    onChange={(e) => setTopicName(e.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                     className="text-lg"
                   />
@@ -83,8 +81,8 @@ export const CreateTopicPage = () => {
                   <Textarea
                     id="topic-description"
                     placeholder="Describe what specific aspects you'd like feedback on. This will help participants provide more relevant responses..."
-                    value={topicDescription}
-                    onChange={(e) => setTopicDescription(e.target.value)}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
                     rows={6}
                     className="resize-none"
                   />

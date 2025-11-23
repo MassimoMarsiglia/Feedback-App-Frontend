@@ -4,10 +4,37 @@ This template provides a minimal setup to get React working in Vite with HMR and
 
 ## Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
+- `npm run dev` - Start development server (uses .env.development)
+- `npm run build` - Build for production (uses .env.production)
 - `npm run preview` - Preview production build locally
 - `npm run lint` - Run ESLint
+
+## Environment Variables
+
+This project uses environment-specific configuration files:
+
+- `.env.development` - Development environment variables (used with `npm run dev`)
+- `.env.production` - Production environment variables (used with `npm run build`)
+- `.env.example` - Example environment file (for reference)
+
+### Available Environment Variables
+
+- `VITE_API_BASE_URL` - Backend API URL
+- `VITE_APP_ENV` - Application environment (development/production)
+
+### Usage in Code
+
+Import the environment config:
+
+```typescript
+import { env } from '@/config/env'
+
+// Use environment variables
+const apiUrl = env.apiBaseUrl
+const isDev = env.isDevelopment
+```
+
+**Note:** All Vite environment variables must be prefixed with `VITE_` to be exposed to the client-side code.
 
 ## AWS S3 Deployment via CodePipeline
 
