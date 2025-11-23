@@ -25,7 +25,6 @@ artifacts:
     - index.html   # Include the root index file
     - assets/**/* # Explicitly include ALL contents of the assets folder, retaining its path
   base-directory: feedback-app/dist
-  discard-paths: yes # Keep this to ensure files go to the S3 bucket root
 cache:
   paths:
     - 'node_modules/**/*'
