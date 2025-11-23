@@ -19,7 +19,6 @@ artifacts:
   files:
     - '**/*'
   base-directory: feedback-app/dist
-  discard-paths: yes
 cache:
   paths:
     - 'node_modules/**/*'
