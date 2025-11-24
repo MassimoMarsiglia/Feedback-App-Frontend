@@ -28,6 +28,13 @@ export interface Feedback {
   sentiment_score: number;
   sentiment: string;
   analyzed_at: string;
+  comments?: string;
+}
+
+export interface GetFeedbackResponse {
+  feedback: Feedback[];
+  count: number;
+  topic_id: string;
 }
 
 export interface SentimentDistribution {
@@ -89,7 +96,7 @@ export const topicApi = {
 export const feedbackApi = {
   // Get all feedback for a topic
   getByTopic: async (topicId: string) => {
-    const response = await apiClient.get<Feedback[]>(
+    const response = await apiClient.get<GetFeedbackResponse>(
       `/topics/${topicId}/feedback`
     );
     return response.data;

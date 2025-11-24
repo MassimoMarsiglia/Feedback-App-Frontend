@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, TrendingUp, MessageSquare, BarChart3, AlertCircle } from 'lucide-react'
 import { feedbackApi, topicApi } from '@/services/api'
-import type { GetSentimentResponse, Topic } from '@/services/api'
+import type { GetSentimentResponse, Topic, Feedback } from '@/services/api'
 import { Spinner } from '@/components/ui/spinner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Slider } from '@/components/ui/slider'
@@ -16,6 +16,7 @@ export const ViewAnalysisPage = () => {
   const [error, setError] = useState<string | null>(null)
   const [topic, setTopic] = useState<Topic | null>(null)
   const [sentiment, setSentiment] = useState<GetSentimentResponse | null>(null)
+  const [feedbackMessages, setFeedbackMessages] = useState<Feedback[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,12 +27,14 @@ export const ViewAnalysisPage = () => {
       }
 
       try {
-        const [topicData, sentimentData] = await Promise.all([
+        const [topicData, sentimentData, feedbackData] = await Promise.all([
           topicApi.getById(topicId),
-          feedbackApi.getSentiment(topicId)
+          feedbackApi.getSentiment(topicId),
+          feedbackApi.getByTopic(topicId)
         ])
         setTopic(topicData)
         setSentiment(sentimentData)
+        setFeedbackMessages(feedbackData.feedback)
       } catch (err) {
         console.error('Failed to fetch analysis:', err)
         setError('Failed to load analysis data.')
@@ -362,6 +365,62 @@ export const ViewAnalysisPage = () => {
                           />
                         </LineChart>
                       </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Feedback Messages */}
+              {feedbackMessages.length > 0 && (
+                <Card className="shadow-xl mb-8">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col items-start">
+                        <CardTitle className="flex items-center gap-2">
+                          <MessageSquare className="h-5 w-5" />
+                          Feedback Messages
+                        </CardTitle>
+                        <CardDescription>
+                          All customer feedback submissions ({feedbackMessages.length} total)
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">{feedbackMessages
+                                .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                                .map((feedback) => {
+                              const sentimentColor = getSentimentColor(feedback.sentiment_score)
+                              const sentimentBg = getSentimentBgColor(feedback.sentiment_score)
+                              const sentimentLabel = getSentimentLabel(feedback.sentiment_score)
+                              
+                              return (
+                                <div
+                                  key={feedback.id}
+                                  className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-3"
+                                >
+                                  <div className="flex items-start justify-between gap-4">
+                                    <div className="flex-1">
+                                      <p className="text-slate-700 dark:text-slate-300">
+                                        {feedback.comments || 'No comment provided'}
+                                      </p>
+                                    </div>
+                                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold shrink-0 ${sentimentBg} ${sentimentColor}`}>
+                                      {sentimentLabel}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+                                    <span>
+                                      {new Date(feedback.created_at).toLocaleDateString()} at {new Date(feedback.created_at).toLocaleTimeString()}
+                                    </span>
+                                    <span>•</span>
+                                    <span>
+                                      Score: {(feedback.sentiment_score * 100).toFixed(0)}%
+                                    </span>
+                                  </div>
+                                </div>
+                              )
+                            })}
                     </div>
                   </CardContent>
                 </Card>
