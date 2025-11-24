@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { ArrowLeft, PlusCircle, Sparkles, Copy, CheckCircle2, ExternalLink, BarChart3 } from 'lucide-react'
+import { ArrowLeft, PlusCircle, Sparkles, Copy, CheckCircle2, ExternalLink, BarChart3, QrCode } from 'lucide-react'
 import { topicApi } from '@/services/api'
+import { QRCodeSVG } from 'qrcode.react'
 
 export const CreateTopicPage = () => {
   const [name, setName] = useState('')
@@ -185,6 +186,25 @@ export const CreateTopicPage = () => {
                   </div>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
                     Share this link with your customers to collect their feedback
+                  </p>
+                </div>
+
+                {/* QR Code Section */}
+                <div className="space-y-2">
+                  <Label className="text-base font-semibold">
+                    Or scan this QR code:
+                  </Label>
+                  <div className="flex justify-center p-6 bg-white rounded-lg border border-slate-200 dark:border-slate-700">
+                    <QRCodeSVG 
+                      value={feedbackLink}
+                      size={200}
+                      level="H"
+                      includeMargin={true}
+                    />
+                  </div>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 text-center">
+                    <QrCode className="inline h-4 w-4 mr-1" />
+                    Scan to access feedback form instantly
                   </p>
                 </div>
 
